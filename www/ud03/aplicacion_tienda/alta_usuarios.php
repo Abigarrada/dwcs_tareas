@@ -1,6 +1,21 @@
 <?php
 //1. Conectar a la base de datos
 
+$sname = "db";
+$uname = "root";
+$passwd = "test";
+
+try {
+  $conexion = new PDO("mysql:host=$sname;dbname=TIENDA", $uname, $passwd);
+  // excepciones
+  $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+  echo "Conexión correcta";
+} catch (PDOException $e) {
+  echo "Fallo en conexión: " . $e->getMessage();
+}
+
+
+
 //2. Comprobar la conexión
 
 //3. Recoger los datos del formulario 
@@ -12,30 +27,32 @@
 //6. Comprobar la insercción 
 
 //7. Cerrar la conexión 
-
+$conexion = null;
 ?>
 
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Tienda </title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-  </head>
-  <body>
-    <h1>Alta usuarios</h1>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
-    <div class="form-group">
 
-    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tienda </title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+</head>
+
+<body>
+  <h1>Alta usuarios</h1>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+  <div class="form-group">
+
+    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
       Nombre: <input type="text" name="name">
       <br><br>
       Apellidos: <input type="text" name="email">
       <br><br>
-      Edad:  <input type="text" name="edad">
+      Edad: <input type="text" name="edad">
       <br><br>
-     <label class="my-1 mr-2" for="inlineFormCustomSelectPref">Provincia:</label>
+      <label class="my-1 mr-2" for="inlineFormCustomSelectPref">Provincia:</label>
       <select class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref">
         <option selected>Elegir: </option>
         <option value="1">A Coruña</option>
@@ -43,9 +60,10 @@
         <option value="3">Ourense</option>
         <option value="3">Pontevedra</option>
       </select>
-      <input type="submit" name="submit" value="Submit"> 
-        <!-- 6. Completar el formulario -->
+      <input type="submit" name="submit" value="Submit">
+      <!-- 6. Completar el formulario -->
     </form>
-</div>
-  </body>
+  </div>
+</body>
+
 </html>
