@@ -144,12 +144,9 @@ function test_input($data)
 
       $stmt->execute();
 
-
       // Comprobar la insercción 
-
-      echo "<p class=\"text-success\">El usuario se ha creado correctamente</p>";
-
-
+      $ultimoId = $conexion->lastInsertId();
+      echo "<p class=\"text-success\">uevo registro creado. Último ID insertado:" . $ultimoId . "</p>";
 
       // Excepciones
 

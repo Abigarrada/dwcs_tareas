@@ -2,7 +2,7 @@
 
 // Recoger los datos del formulario y validación
 
-$listaProvincias = ["", "A Coruña", "Lugo", "Ourense", "Pontevedra"];
+$lp = ["", "A Coruña", "Lugo", "Ourense", "Pontevedra"];
 
 $nombreErr = $apellidosErr = $edadErr = $provinciaErr = "";
 $nombre = $apellidos = $edad = $provincia = "";
@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   if (empty($_POST["provincia"])) {
     $provinciaErr = "Selecciona tu provincia";
   } else {
-    $provincia = $listaProvincias[test_input($_POST["provincia"])];
+    $provincia = $lp[test_input($_POST["provincia"])];
   }
 }
 
@@ -40,7 +40,6 @@ function test_input($data)
   $data = htmlspecialchars($data);
   return $data;
 }
-
 
 
 ?>
@@ -92,6 +91,30 @@ function test_input($data)
     <br>
     <?php
 
+
+    //1. Crear la conexión 
+    @$conexion = new mysqli('db', 'root', 'test', 'TIENDA');
+    //2. Comprobar la conexión
+    $error = $conexion->connect_error;
+    if ($error != null) {
+      die("Fallo en la conexión: " . $conexion->connect_error . "Con número" . $error);
+    }
+    echo "Conexión correcta";
+
+    //3. Insertar datos
+    $sql = "INSERT INTO Usuarios (nombre, apellidos, edad, provincia) 
+VALUES ($nombre, $apellidos, $edad, $provincia);";
+    //Comprobar inserción
+    if ($conexion->query($sql)) {
+      echo "<p class=\"text-success\">El usuario se ha creado correctamente</p>";
+    } else {
+      echo "<p class=\"text-danger\">Ha ocurrido un error: </p>" . $conexion->error;
+    }
+
+    //Cerrar la conexión
+    $conexion->close();
+
+    /*
     // Conexión a la base de datos
 
     $sname = "db";
@@ -144,7 +167,7 @@ function test_input($data)
     // Cerrar la conexión 
 
     $conexion = null;
-
+*/
     ?>
   </div>
 
