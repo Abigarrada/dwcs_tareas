@@ -102,10 +102,22 @@ function test_input($data)
       $conexion = new PDO("mysql:host=$sname;dbname=TIENDA", $uname, $passwd);
       // Comprobación de conexión
       $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-      echo "<p>Conexión correcta</p>";
+      // echo "<p>Conexión correcta</p>";
+
+      // Creacion base de datos
+      $sql = "CREATE DATABASE TIENDA IF NOT EXISTS";
+      // Crear tabla donantes
+      $sql = "CREATE TABLE Usuarios IF NOT EXISTS(
+        id INT AUTO_INCREMENT PRIMARY KEY, 
+        nombre VARCHAR(50) NOT NULL,
+        apellidos VARCHAR(100) NOT NULL,
+        edad INT NOT NULL,
+        provincia VARCHAR(50) NOT NULL
+        )";
+
+      // echo "Base de datos creada correctamente";
 
       // Inserción del registro en la base de datos
-
 
       $stmt = $conexion->prepare("INSERT INTO Usuarios (nombre, apellidos, edad, provincia)
     VALUES (:nombre, :apellido, :edad, :provincia)");

@@ -18,6 +18,8 @@
     <h1 class="display-1">Les fleurs du café</h1>
   </div>
   <div class="container">
+    <br>
+    <p>¡Bienvenidos a la primera florestería cafetería de Vigo!</p>
     <!-- Completar el nombre de la tienda con la temática elegida. -->
     <br>
 
