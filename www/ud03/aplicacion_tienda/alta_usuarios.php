@@ -1,33 +1,48 @@
 <?php
-//1. Conectar a la base de datos
 
-$sname = "db";
-$uname = "root";
-$passwd = "test";
+// Recoger los datos del formulario y validación
 
-try {
-  $conexion = new PDO("mysql:host=$sname;dbname=TIENDA", $uname, $passwd);
-  // excepciones
-  $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-  echo "Conexión correcta";
-} catch (PDOException $e) {
-  echo "Fallo en conexión: " . $e->getMessage();
+$listaProvincias = ["", "A Coruña", "Lugo", "Ourense", "Pontevedra"];
+
+$nombreErr = $apellidosErr = $edadErr = $provinciaErr = "";
+$nombre = $apellidos = $edad = $provincia = "";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  if (empty($_POST["nombre"])) {
+    $nombreErr = "Introduce un nombre";
+  } else {
+    $nombre = test_input($_POST["nombre"]);
+  }
+
+  if (empty($_POST["apellidos"])) {
+    $apellidosErr = "Introduce un apellido";
+  } else {
+    $apellidos = test_input($_POST["apellidos"]);
+  }
+
+  if (empty($_POST["edad"])) {
+    $edadErr = "Introduce tu edad";
+  } else {
+    $edad = test_input($_POST["edad"]);
+  }
+
+  if (empty($_POST["provincia"])) {
+    $provinciaErr = "Selecciona tu provincia";
+  } else {
+    $provincia = $listaProvincias[test_input($_POST["provincia"])];
+  }
+}
+
+function test_input($data)
+{
+  $data = trim($data);
+  $data = stripslashes($data);
+  $data = htmlspecialchars($data);
+  return $data;
 }
 
 
 
-//2. Comprobar la conexión
-
-//3. Recoger los datos del formulario 
-
-//4. Validar los datos del formulario evitando posibles ataques y comprobando que estén los datos obligatorios. 
-
-//5. Insertar el registro en la base de datos
-
-//6. Comprobar la insercción 
-
-//7. Cerrar la conexión 
-$conexion = null;
 ?>
 
 <!doctype html>
@@ -36,34 +51,95 @@ $conexion = null;
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Tienda </title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+  <title>Les fleurs du café</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
 <body>
-  <h1>Alta usuarios</h1>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
-  <div class="form-group">
 
+  <div class="container">
+    <h1 class="display-1">Les fleurs du café</h1>
+  </div>
+
+  <div class="container form-group">
+    <br>
+    <h2 class="display-3">Alta usuarios</h2>
     <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-      Nombre: <input type="text" name="name">
+      Nombre: <input type="text" class="form-control" name="nombre">
       <br><br>
-      Apellidos: <input type="text" name="email">
+      Apellidos: <input type="text" class="form-control" name="apellidos">
       <br><br>
-      Edad: <input type="text" name="edad">
+      Edad: <input type="number" class="form-control" name="edad">
       <br><br>
-      <label class="my-1 mr-2" for="inlineFormCustomSelectPref">Provincia:</label>
-      <select class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref">
-        <option selected>Elegir: </option>
+      <label class="my-1 mr-2" for="provincia">Provincia:</label>
+      <select class="custom-select my-1 mr-sm-2" id="provincia">
+        <option value="0" selected>Elegir: </option>
         <option value="1">A Coruña</option>
         <option value="2">Lugo</option>
         <option value="3">Ourense</option>
-        <option value="3">Pontevedra</option>
+        <option value="4">Pontevedra</option>
       </select>
-      <input type="submit" name="submit" value="Submit">
+      <br><br>
+      <input type="submit" class="btn btn-dark" name="submit" value="Enviar">
       <!-- 6. Completar el formulario -->
     </form>
   </div>
+
+  <div class="container">
+    <br>
+    <?php
+
+    // Conexión a la base de datos
+
+    $sname = "db";
+    $uname = "root";
+    $passwd = "test";
+
+    try {
+      $conexion = new PDO("mysql:host=$sname;dbname=TIENDA", $uname, $passwd);
+      // Comprobación de conexión
+      $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      echo "<p>Conexión correcta</p>";
+
+      // Inserción del registro en la base de datos
+
+
+      $stmt = $conexion->prepare("INSERT INTO Usuarios (nombre, apellidos, edad, provincia)
+    VALUES (:nombre, :apellido, :edad, :provincia)");
+      $stmt->bindParam(':nombre', $nombre);
+      $stmt->bindParam(':apellido', $apellidos);
+      $stmt->bindParam(':edad', $edad);
+      $stmt->bindParam(':provincia', $provincia);
+
+      $stmt->execute();
+
+
+      // Comprobar la insercción 
+
+      echo "<p class=\"text-success\">El usuario se ha creado correctamente</p>";
+
+
+
+      // Excepciones
+
+    } catch (PDOException $e) {
+      echo "Fallo en conexión: " . $e->getMessage();
+    }
+
+    // Cerrar la conexión 
+
+    $conexion = null;
+
+    ?>
+  </div>
+
+  <footer class="container">
+    <br><a class="text-info" href="./index.php">Volver al inicio</a>
+  </footer>
+
 </body>
 
 </html>
