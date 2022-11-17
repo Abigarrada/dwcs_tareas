@@ -23,6 +23,9 @@
         <th scope="col">Grupo Sanguíneo</th>
         <th scope="col">Código Postal</th>
         <th scope="col">Teléfono Móvil</th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+        <th scope="col"></th>
       </tr>
     </thead>
     <tbody>
@@ -61,7 +64,11 @@
           "<td scope=\"col\">" . $v["edad"] . "</td>",
           "<td scope=\"col\">" . $v["grupoSanguineo"] . "</td>",
           "<td scope=\"col\">" . $v["codigoPostal"] . "</td>",
-          "<td scope=\"col\">" . $v["telefonoMovil"] . "</td></tr>";
+          "<td scope=\"col\">" . $v["telefonoMovil"] . "</td>",
+          "<td> <a class='btn btn-primary' href=./modificar.php?id=" . $v['id'] . ">Nueva donación</a> </td>",
+          "<td> <a class='btn btn-secondary' href=./modificar.php?id=" . $v['id'] . ">Donaciones</a> </td>",
+          "<td> <a class='btn btn-danger' href=./borrar.php?id=" . $v['id'] . ">Eliminar</a> </td>",
+          "</tr>";
         }
 
         // Excepciones
@@ -75,21 +82,10 @@
       $conexion = null;
 
       ?>
+
     </tbody>
   </table>
   </div>
-
-
-
-
-
-
-
-
-
-
-
-
 
 </body>
 

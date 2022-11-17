@@ -26,6 +26,8 @@
           <th scope="col">Apellidos</th>
           <th scope="col">Edad</th>
           <th scope="col">Provincia</th>
+          <th scope="col"></th>
+          <th scope="col"></th>
           <!-- Completar la tabla -->
         </tr>
       </thead>
@@ -58,7 +60,10 @@
             "<td scope=\"col\">" . $v["nombre"] . "</td>",
             "<td scope=\"col\">" . $v["apellidos"] . "</td>",
             "<td scope=\"col\">" . $v["edad"] . "</td>",
-            "<td scope=\"col\">" . $v["provincia"] . "</td></tr>";
+            "<td scope=\"col\">" . $v["provincia"] . "</td>",
+            "<td> <a class='btn btn-secondary' href=modificar.php?id=" . $v['id'] . ">Modificar</a> </td>",
+            "<td> <a class='btn btn-danger' href=borrar.php?id=" . $v['id'] . ">Eliminar</a> </td>",
+            "</tr>";
           }
 
           // Excepciones
@@ -66,8 +71,6 @@
         } catch (PDOException $e) {
           echo "Fallo en conexión: " . $e->getMessage();
         }
-
-
 
         //5. Si se devuelven más de cero filas, recorrer los resultados e imprimir en una tabla los resultados 
 
