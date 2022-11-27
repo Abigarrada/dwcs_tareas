@@ -91,7 +91,6 @@ function test_input($data)
     <br>
     <?php
 
-
     //1. Crear la conexión 
     @$conexion = new mysqli('db', 'root', 'test', 'TIENDA');
     //2. Comprobar la conexión
@@ -113,6 +112,7 @@ VALUES ($nombre, $apellidos, $edad, $provincia);";
 
     //Cerrar la conexión
     $conexion->close();
+
 
     /*
     // Conexión a la base de datos
