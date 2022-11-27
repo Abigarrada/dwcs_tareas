@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 // 1. Almacena en un array los 10 primeros números pares. 
 //Imprímelos cada uno en una línea.
@@ -15,6 +15,11 @@ $v[1] = 90;
 $v[10] = 200;
 $v['hola'] = 43;
 $v[9] = 'e';
+
+
+foreach ($v as $k => $v) {
+    echo $v;
+}
 
 foreach ($v as $key => $value) {
     echo "Clave: " . $key . " Valor: " . $value . "<br/>";
