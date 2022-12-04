@@ -1,49 +1,3 @@
-<?php
-
-// Recoger los datos del formulario y validación
-
-$lp = ["", "A Coruña", "Lugo", "Ourense", "Pontevedra"];
-
-$nombreErr = $apellidosErr = $edadErr = $provinciaErr = "";
-$nombre = $apellidos = $edad = $provincia = "";
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  if (empty($_POST["nombre"])) {
-    $nombreErr = "Introduce un nombre";
-  } else {
-    $nombre = test_input($_POST["nombre"]);
-  }
-
-  if (empty($_POST["apellidos"])) {
-    $apellidosErr = "Introduce un apellido";
-  } else {
-    $apellidos = test_input($_POST["apellidos"]);
-  }
-
-  if (empty($_POST["edad"])) {
-    $edadErr = "Introduce tu edad";
-  } else {
-    $edad = test_input($_POST["edad"]);
-  }
-
-  if (empty($_POST["provincia"])) {
-    $provinciaErr = "Selecciona tu provincia";
-  } else {
-    $provincia = $lp[test_input($_POST["provincia"])];
-  }
-}
-
-function test_input($data)
-{
-  $data = trim($data);
-  $data = stripslashes($data);
-  $data = htmlspecialchars($data);
-  return $data;
-}
-
-
-?>
-
 <!doctype html>
 <html lang="en">
 
@@ -74,7 +28,7 @@ function test_input($data)
       Edad: <input type="number" class="form-control" name="edad">
       <br><br>
       <label class="my-1 mr-2" for="provincia">Provincia:</label>
-      <select class="custom-select my-1 mr-sm-2" id="provincia">
+      <select class="custom-select my-1 mr-sm-2" id="provincia" name="provincia">
         <option value="0" selected>Elegir: </option>
         <option value="1">A Coruña</option>
         <option value="2">Lugo</option>
@@ -83,7 +37,6 @@ function test_input($data)
       </select>
       <br><br>
       <input type="submit" class="btn btn-dark" name="submit" value="Enviar">
-      <!-- 6. Completar el formulario -->
     </form>
   </div>
 
@@ -91,8 +44,34 @@ function test_input($data)
     <br>
     <?php
 
+    function executeQuery($conexion, $query, $okMsg, $errMsg = "Ha ocurrido un error")
+    {
+      if ($conexion->query($query)) {
+        echo "<p class=\"text-success\">$okMsg</p>";
+      } else {
+        echo "<p class=\"text-danger\">$errMsg:<br/>$conexion->error</p>";
+      }
+    }
+
+    function test_input($data)
+    {
+      $data = trim($data);
+      $data = stripslashes($data);
+      $data = htmlspecialchars($data);
+      return $data;
+    }
+
+    // Recoger los datos del formulario y validación
+
+    $lp = ["", "A Coruña", "Lugo", "Ourense", "Pontevedra"];
+
+    $nombreErr = $apellidosErr = $edadErr = $provinciaErr = "";
+    $nombre = $apellidos = $edad = $provincia = "";
+
+
     //1. Crear la conexión 
-    @$conexion = new mysqli('db', 'root', 'test', 'TIENDA');
+    $conexion = new mysqli('db', 'root', 'test');
+
     //2. Comprobar la conexión
     $error = $conexion->connect_error;
     if ($error != null) {
@@ -101,36 +80,11 @@ function test_input($data)
     echo "Conexión correcta";
 
     //3. Insertar datos
-    $sql = "INSERT INTO Usuarios (nombre, apellidos, edad, provincia) 
-VALUES ($nombre, $apellidos, $edad, $provincia);";
-    //Comprobar inserción
-    if ($conexion->query($sql)) {
-      echo "<p class=\"text-success\">El usuario se ha creado correctamente</p>";
-    } else {
-      echo "<p class=\"text-danger\">Ha ocurrido un error: </p>" . $conexion->error;
-    }
+    executeQuery($conexion, "CREATE DATABASE IF NOT EXISTS tienda", "");
 
-    //Cerrar la conexión
-    $conexion->close();
+    $conexion->select_db("tienda");
 
-
-    /*
-    // Conexión a la base de datos
-
-    $sname = "db";
-    $uname = "root";
-    $passwd = "test";
-
-    try {
-      $conexion = new PDO("mysql:host=$sname;dbname=TIENDA", $uname, $passwd);
-      // Comprobación de conexión
-      $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-      // echo "<p>Conexión correcta</p>";
-
-      // Creacion base de datos
-      $sql = "CREATE DATABASE TIENDA IF NOT EXISTS";
-      // Crear tabla donantes
-      $sql = "CREATE TABLE Usuarios IF NOT EXISTS(
+    $sqlTAB = "CREATE TABLE IF NOT EXISTS usuarios (
         id INT AUTO_INCREMENT PRIMARY KEY, 
         nombre VARCHAR(50) NOT NULL,
         apellidos VARCHAR(100) NOT NULL,
@@ -138,36 +92,58 @@ VALUES ($nombre, $apellidos, $edad, $provincia);";
         provincia VARCHAR(50) NOT NULL
         )";
 
-      // echo "Base de datos creada correctamente";
+    executeQuery($conexion, $sqlTAB, "");
 
-      // Inserción del registro en la base de datos
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-      $stmt = $conexion->prepare("INSERT INTO Usuarios (nombre, apellidos, edad, provincia)
-    VALUES (:nombre, :apellido, :edad, :provincia)");
-      $stmt->bindParam(':nombre', $nombre);
-      $stmt->bindParam(':apellido', $apellidos);
-      $stmt->bindParam(':edad', $edad);
-      $stmt->bindParam(':provincia', $provincia);
+      $hasError = false;
+      if (empty($_POST["nombre"])) {
+        $nombreErr = "Introduce un nombre";
+        $hasError = true;
+      } else {
+        $nombre = test_input($_POST["nombre"]);
+      }
 
-      $stmt->execute();
+      if (empty($_POST["apellidos"])) {
+        $apellidosErr = "Introduce un apellido";
+        $hasError = true;
+      } else {
+        $apellidos = test_input($_POST["apellidos"]);
+      }
 
+      if (empty($_POST["edad"])) {
+        $edadErr = "Introduce tu edad";
+        $hasError = true;
+      } else {
+        $edad = test_input($_POST["edad"]);
+      }
 
-      // Comprobar la insercción 
+      if (empty($_POST["provincia"])) {
+        $provinciaErr = "Selecciona tu provincia";
+        $hasError = true;
+      } else {
+        $provincia = $lp[test_input($_POST["provincia"])];
+      }
 
-      echo "<p class=\"text-success\">El usuario se ha creado correctamente</p>";
+      if (!$hasError) {
 
+        $sqlQUERY = "INSERT INTO usuarios (nombre, apellidos, edad, provincia) 
+VALUES ('$nombre', '$apellidos', $edad, '$provincia');";
 
-
-      // Excepciones
-
-    } catch (PDOException $e) {
-      echo "Fallo en conexión: " . $e->getMessage();
+        executeQuery($conexion, $sqlQUERY, "El usuario se ha creado correctamente");
+      } else {
+        echo "<p class=\"text-danger\">Ha habido los siguientes errores:</p>";
+        echo $nombreErr ?? "-";
+        echo $apellidosErr ?? "-";
+        echo $edadErr ?? "-";
+        echo $provinciaErr ?? "-";
+      }
     }
 
-    // Cerrar la conexión 
+    //Cerrar la conexión
+    $conexion->close();
 
-    $conexion = null;
-*/
+
     ?>
   </div>
 
