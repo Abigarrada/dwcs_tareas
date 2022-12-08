@@ -28,62 +28,14 @@
           <th scope="col">Provincia</th>
           <th scope="col"></th>
           <th scope="col"></th>
-          <!-- Completar la tabla -->
         </tr>
       </thead>
       <tbody>
-
         <?php
-
-        //1. Crear la conexión 
-
-        $sname = "db";
-        $uname = "root";
-        $passwd = "test";
-
-        try {
-          $conexion = new PDO("mysql:host=$sname;dbname=TIENDA", $uname, $passwd);
-          //2. Comprobar la conexión
-          $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-          //echo "<p>Conexión correcta</p>";
-
-          //3. Configurar una consulta SQL que selecciona las columnas id, nombre, apellido, edad y provincia de la tabla Cliente. 
-
-          $stmt = $conexion->prepare("SELECT * FROM Usuarios");
-          $stmt->execute();
-
-          // resultados
-
-          $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
-          foreach ($stmt->fetchAll() as $key => $v) {
-            echo "<tr><td scope=\"col\">" . $v["id"] . "</td>",
-            "<td scope=\"col\">" . $v["nombre"] . "</td>",
-            "<td scope=\"col\">" . $v["apellidos"] . "</td>",
-            "<td scope=\"col\">" . $v["edad"] . "</td>",
-            "<td scope=\"col\">" . $v["provincia"] . "</td>",
-            "<td> <a class='btn btn-secondary' href=modificar.php?id=" . $v['id'] . ">Modificar</a> </td>",
-            "<td> <a class='btn btn-danger' href=borrar.php?id=" . $v['id'] . ">Eliminar</a> </td>",
-            "</tr>";
-          }
-
-          // Excepciones
-
-        } catch (PDOException $e) {
-          echo "Fallo en conexión: " . $e->getMessage();
-        }
-
-        //5. Si se devuelven más de cero filas, recorrer los resultados e imprimir en una tabla los resultados 
-
-        //Ejemplo: echo "<td>". $row['id']. "</td> "; 
-
-        //6. Eliminar la fila correspondiente. 
-
-        //Ejemplo:  echo "<td> <a class='btn btn-primary' href=borrar.php?id=".$row['id'].">Borrar</a> </td>";
-
-        //7. Cerrar conexión 
-
-        $conexion = null;
-
+        include "funciones.php";
+        $conexion = conecta_bbdd();
+        listar_usuarios($conexion);
+        $conexion->close();
         ?>
       </tbody>
     </table>
