@@ -141,6 +141,7 @@ function borra_usuario($id, $conexion)
     } else {
         echo "<p class=\"text-danger\">Escoja un usuario válido.</p>";
     }
+    $conexion->close();
 }
 
 function test_input($data)

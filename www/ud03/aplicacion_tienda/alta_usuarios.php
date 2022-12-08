@@ -45,10 +45,8 @@
     <?php
     include "funciones.php";
 
-    // Recoger los datos del formulario y validación
-
     $conexion = crea_bbdd_y_conecta();
-    $crea_o_actualiza_usuario($conexion);
+    crea_o_actualiza_usuario($conexion, null);
 
     ?>
   </div>
