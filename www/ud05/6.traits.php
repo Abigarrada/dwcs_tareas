@@ -1,6 +1,66 @@
 
 <?php 
 
+trait CalculosCentroEstudos {
+    public function numeroDeAprobados(){
+        return false;
+    }
+    public function numeroDeSuspensos()
+    {
+        return false;
+    }
+    public function notaMedia()
+    {
+        return false;
+    }
+}
+
+trait MostrarCalculos {
+    public function saludo(){
+        return "Bienvenido al centro de cálculo";
+    }
+
+    public function showCalculusStudyCenter(){
+        echo "La información reunida de este objeto es: <br>
+        Número de aprobados: " . $this->numeroDeAprobados() . "<br>",
+        "Número de suspensos: " . $this->numeroDeSuspensos() . "<br>",
+        "Nota media: " . $this->notaMedia();
+    }
+}
+
+class NotasTrait implements CalculosCentroEstudos, MostrarCalculos {
+    
+    //Implementación de los traits
+    
+    public function numeroDeAprobados()
+    {
+        return false;
+    }
+    public function numeroDeSuspensos()
+    {
+        return false;
+    }
+    public function notaMedia()
+    {
+        return false;
+    }
+
+    public function saludo()
+    {
+        return "Bienvenido al centro de cálculo";
+    }
+
+    public function showCalculusStudyCenter()
+    {
+        echo "La información reunida de este objeto es: <br>
+        Número de aprobados: " . $this->numeroDeAprobados() . "<br>",
+        "Número de suspensos: " . $this->numeroDeSuspensos() . "<br>",
+        "Nota media: " . $this->notaMedia();
+    }
+    
+}
+
+
 /*
 1. Cree un *Trait* llamado ```CalculosCentroEstudos``` con las mismas funciones que la interfaz del ejercicio 4.5.
 2. Cree otro *Trait* denominado ```MostrarCalculos``` con dos funciones: 

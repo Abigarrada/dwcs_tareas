@@ -1,5 +1,19 @@
 
-<?php 
+<?php
+
+$object = new class($altura, $base)
+{
+    private $altura;
+    private $base;
+    public function __construct($altura, $base)
+    {
+        $this->altura = $altura;
+        $this->base = $base;
+    }
+    public function area() {
+        return ($this->base * $this->altura) / 2;
+    }
+};
 
 /*
 

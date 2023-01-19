@@ -1,14 +1,27 @@
 
-<?php 
+<?php
 
+class Alien
+{
+    public $nombre;
+    public $numberOfAliens = 0;
 
+    public function __construct($nombre)
+    {
+        $this->nombre = $nombre;
+        $this->numberOfAliens++;
+    }
 
-//1. Crea una clase ```Alien``` con un atributo llamado nombre y un constructor.
+    public function getNumberOfAliens()
+    {
+        return $this->numberOfAliens;
+    }
+}
 
-//2. Agregue un atributo ```numberOfAliens``` para que podamos saber la cantidad de objetos de esta clase que se han creado.
+$alien1 = new Alien("Pepe");
+$alien2 = new Alien("Paco");
+$alien3 = new Alien("Pato");
+$alien4 = new Alien("Pepo");
+$alien5 = new Alien("Pico");
 
-//3. Cree un método ```getNumberOfAliens``` que devuelva esa información.
-
-//Escribe el código que crea varios objetos de Alien y muestra el valor devuelto por el método ```numberOfAliens```.
-
-
+$alien1->getNumberOfAliens();

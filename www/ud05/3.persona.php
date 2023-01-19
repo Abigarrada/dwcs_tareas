@@ -1,26 +1,92 @@
 
-<?php 
+<?php
 
-/*
-1. Cree una clase abstracta `Persona`:
-    - Con las siguientes propiedades: 
-        - `$id` private (`private`).
-        - `$nombre` protegida (`protected`).
-        - `$apellidos` protegida (`protected`).
-    - Tiene como métodos abstractos los getters, los setters y el constructor. 
-    - Tiene un método abstracto llamado `accion()`. */
+abstract class Persona
+{
 
+    //Propiedades
+    private $id;
+    protected $nombre;
+    protected $apellidos;
 
+    //Constructor
+    function __construct($nombre, $apellidos)
+    {
+        $this->id++;
+        $this->nombre = $nombre;
+        $this->apellidos = $apellidos;
+    }
 
+    //Métodos abstractos
+    abstract function setNombre($nombre);
+    abstract function getNombre();
+    abstract function setApellidos($apellidos);
+    abstract function getApellidos();
+    abstract function action();
+}
 
-/*
-2. Crea dos subclases:
-    - `Usuarios`
-    - `Administradores`
-    */ 
+class Usuarios extends Persona
+{
 
-//3. Implementa el método `accion()` que muestre el nombre y los apellidos de la persona, así como una frase identificando si es un usuario o un administrador. 
+    //Métodos de la clase abstracta
+    function setNombre($nombre)
+    {
+        $this->nombre = $nombre;
+    }
+    function getNombre()
+    {
+        return $this->nombre;
+    }
+    function setApellidos($apellidos)
+    {
+        $this->apellidos = $apellidos;
+    }
+    function getApellidos()
+    {
+        $this->apellidos;
+    }
+    function action()
+    {
+        echo "Nombre: " . $this->getNombre() . "<br>",
+        "Apellido: " . $this->getApellidos() . "<br>",
+        "Tipo: Usuario";
+    }
+}
 
+class Administradores extends Persona
+{
 
+    //Métodos de la clase abstracta
+    function setNombre($nombre)
+    {
+        $this->nombre = $nombre;
+    }
+    function getNombre()
+    {
+        return $this->nombre;
+    }
+    function setApellidos($apellidos)
+    {
+        $this->apellidos = $apellidos;
+    }
+    function getApellidos()
+    {
+        $this->apellidos;
+    }
+    function action()
+    {
+        echo "Nombre: " . $this->getNombre() . "<br>",
+        "Apellido: " . $this->getApellidos() . "<br>",
+        "Tipo: Administrador";
+    }
+}
 
-//4. Genera los objetos que nos permitan identificar un buen funcionamiento de la aplicación. 
+$user1 = new Usuarios("Ana", "Barcia Pérez");
+$user2 = new Usuarios("Antonio", "Cardenal Ruiz");
+$admin1 = new Usuarios("Manuel", "Navarro López");
+$admin2 = new Usuarios("María", "Álvarez Moro");
+
+$user1->action();
+$user2->action();
+$admin1->action();
+$admin2->action();
