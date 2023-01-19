@@ -1,50 +1,60 @@
 
-<?php 
+<?php
 
-trait CalculosCentroEstudos {
-    public function numeroDeAprobados(){
-        return false;
-    }
-    public function numeroDeSuspensos()
+trait CalculosCentroEstudos
+{
+ 
+    public function getNotas()
     {
-        return false;
+        return $this->notas;
     }
-    public function notaMedia()
+
+    public function toString()
     {
-        return false;
-    }
-}
-
-trait MostrarCalculos {
-    public function saludo(){
-        return "Bienvenido al centro de cálculo";
+        $listaDeNotas = "";
+        foreach ($this->getNotas() as $nota) {
+            $listaDeNotas .= "[$nota]";
+        }
+        return $listaDeNotas;
     }
 
-    public function showCalculusStudyCenter(){
-        echo "La información reunida de este objeto es: <br>
-        Número de aprobados: " . $this->numeroDeAprobados() . "<br>",
-        "Número de suspensos: " . $this->numeroDeSuspensos() . "<br>",
-        "Nota media: " . $this->notaMedia();
-    }
-}
-
-class NotasTrait implements CalculosCentroEstudos, MostrarCalculos {
-    
-    //Implementación de los traits
-    
     public function numeroDeAprobados()
     {
-        return false;
+        $numeroDeAprobados = 0;
+        foreach ($this->getNotas() as $nota) {
+            if ($nota >= 5) {
+                $numeroDeAprobados++;
+            }
+        }
+
+        return $numeroDeAprobados;
     }
     public function numeroDeSuspensos()
     {
-        return false;
+        $numeroDeSuspensos = 0;
+        foreach ($this->getNotas() as $nota) {
+            if ($nota <= 5) {
+                $numeroDeSuspensos++;
+            }
+        }
+
+        return $numeroDeSuspensos;
     }
     public function notaMedia()
     {
-        return false;
-    }
+        $suma = 0;
+        foreach ($this->getNotas() as $nota) {
+            $suma = $suma + $nota;
+        }
 
+        $media = $suma / count($this->getNotas());
+
+        return $media;
+    }
+}
+
+trait MostrarCalculos
+{
     public function saludo()
     {
         return "Bienvenido al centro de cálculo";
@@ -57,9 +67,27 @@ class NotasTrait implements CalculosCentroEstudos, MostrarCalculos {
         "Número de suspensos: " . $this->numeroDeSuspensos() . "<br>",
         "Nota media: " . $this->notaMedia();
     }
-    
 }
 
+class NotasTrait extends CalculosCentroEstudos, MostrarCalculos
+{
+
+    //Propiedades
+    public $notas = [5, 3, 8, 7, 6, 8, 9, 7, 5, 6, 3, 4, 5];
+
+    //Uso de los traits
+    use CalculosCentroEstudos;
+    use MostrarCalculos;
+}
+
+
+$proba = new NotasTrait();
+$proba->toString();
+$proba->numeroDeAprobados();
+$proba->numeroDeSuspensos();
+$proba->notaMedia();
+$proba->saludo();
+$proba->showCalculusStudyCenter();
 
 /*
 1. Cree un *Trait* llamado ```CalculosCentroEstudos``` con las mismas funciones que la interfaz del ejercicio 4.5.
@@ -70,4 +98,3 @@ class NotasTrait implements CalculosCentroEstudos, MostrarCalculos {
 
 Escriba el código correspondiente para "probar" el código anterior.
 */
-

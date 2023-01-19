@@ -23,7 +23,7 @@ class NotasDaw extends Notas implements CalculosCentroEstudios
 {
 
     //Propiedades
-    public $notas = [];
+    public $notas = [5, 3, 8, 7, 6, 8, 9, 7, 5, 6, 3, 4, 5];
 
 
     //Métodos propios
@@ -43,47 +43,43 @@ class NotasDaw extends Notas implements CalculosCentroEstudios
     }
 
     //Métodos de la interfaz
-    public function numeroDeAprobados(): int
+    public function numeroDeAprobados()
     {
+        $numeroDeAprobados = 0;
+        foreach ($this->getNotas() as $nota) {
+            if ($nota >= 5) {
+                $numeroDeAprobados++;
+            }
+        }
 
-        return false;
+        return $numeroDeAprobados;
     }
-    public function numeroDeSuspensos(): int
+    public function numeroDeSuspensos()
     {
+        $numeroDeSuspensos = 0;
+        foreach ($this->getNotas() as $nota) {
+            if ($nota <= 5) {
+                $numeroDeSuspensos++;
+            }
+        }
 
-        return false;
+        return $numeroDeSuspensos;
     }
-    public function notaMedia(): float
+    public function notaMedia()
     {
+        $suma = 0;
+        foreach ($this->getNotas() as $nota) {
+            $suma = $suma + $nota;
+        }
 
-        return false;
+        $media = $suma / count($this->getNotas());
+
+        return $media;
     }
 }
 
-/*
-
-1. Declara una **interface** llamada `CalculosCentroEstudios` con los siguientes métodos:
-    - ```numeroDeAprobados```, que devuelve el número de aprobados.
-    - ```numeroDeSuspensos```, que devuelve el número de suspensos.
-    - ```notaMedia```, que devuelve la nota media.
-
-2. Crea una clase ```Notas```:
-    - Tendrá un atributo llamado ```notas```. Este atributo será un array con diferentes notas enteras. 
-    - Tendrá una función abstracta ```toString()```. Esta función pasará el array a string y lo devolverá. Ejemplo:
-
-    ```php
-        public function toString()
-        {
-            $listaDeNotas = "";
-            foreach ($this->get_notas() as $nota) {
-                $listaDeNotas .= "[$nota]";
-            }
-            return $listaDeNotas;
-        }
-    ```
-
-3. Crea por último, una clase denominada ```NotasDaw``` que hereda de la clase ```Notas``` e implementa ```CalculosCentroEstudos```.
-4. Escribe el código correspondente para "testear" la anterior clase:
-    -  Crea un objeto de la clase ```NotasDaw``` e invocar todos los métodos de esta clase mostrando por pantalla los resultados.
-    
-*/
+$proba = new NotasDaw();
+$proba->toString();
+$proba->numeroDeAprobados();
+$proba->numeroDeSuspensos();
+$proba->notaMedia();
