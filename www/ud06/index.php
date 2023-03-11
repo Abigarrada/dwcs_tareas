@@ -174,14 +174,19 @@ Flight::route('GET /reservas', function () {
 
 
 Flight::route('POST /reservas', function () {
+    $id_cliente = Flight::request()->data->id_cliente;
+    $id_hotel = Flight::request()->data->id_hotel;
+    $fecha_reserva = Flight::request()->data->fecha_reserva;
     $fecha_reserva = Flight::request()->data->fecha_reserva;
     $fecha_entrada = Flight::request()->data->fecha_entrada;
     $fecha_salida = Flight::request()->data->fecha_salida;
 
 
-    $sql = "INSERT INTO reservas (fecha_reserva, fecha_entrada, fecha_salida) VALUES (:fecha_reserva, :fecha_entrada, :fecha_salida)";
+    $sql = "INSERT INTO reservas (id_cliente, id_hotel, fecha_reserva, fecha_entrada, fecha_salida) VALUES (:id_cliente, :id_hotel, :fecha_reserva, :fecha_entrada, :fecha_salida)";
     $query = Flight::db()->prepare($sql);
 
+    $query->bindParam(':id_cliente', $id_cliente);
+    $query->bindParam(':id_hotel', $id_hotel);
     $query->bindParam(':fecha_reserva', $fecha_reserva);
     $query->bindParam(':fecha_entrada', $fecha_entrada);
     $query->bindParam(':fecha_salida', $fecha_salida);
