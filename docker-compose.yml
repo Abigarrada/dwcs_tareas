@@ -20,7 +20,7 @@ services:
         ports:
             - "80:80"
         volumes:
-            - C:\Users\Le\OneDrive\Escritorio\git\dwcs\dwcs_tareas\www
+            - ./www
             - persistent:./www:/var/www/html
         links:
             - db
