@@ -29,14 +29,18 @@ Flight::route('GET /clientes', function () {
 Flight::route('POST /clientes', function () {
     $nombre = Flight::request()->data->nombre;
     $apellidos = Flight::request()->data->apellidos;
+    $edad = Flight::request()->data->edad;
     $email = Flight::request()->data->email;
+    $telefono = Flight::request()->data->telefono;
 
-    $sql = "INSERT INTO clientes (nombre, apellidos, email) VALUES (:nombre, :apellidos, :email)";
+    $sql = "INSERT INTO clientes (nombre, apellidos, edad, email, telefono) VALUES (:nombre, :apellidos, :edad, :email, :telefono)";
     $query = Flight::db()->prepare($sql);
 
     $query->bindParam(':nombre', $nombre);
     $query->bindParam(':apellidos', $apellidos);
+    $query->bindParam(':edad', $edad);
     $query->bindParam(':email', $email);
+    $query->bindParam(':telefono', $telefono);
 
     $query->execute();
 
@@ -57,25 +61,25 @@ Flight::route('DELETE /clientes', function () {
 });
 
 Flight::route('PUT /clientes', function () {
-    $nombre = Flight::request()->data->nombre;
     $apellidos = Flight::request()->data->apellidos;
+    $edad = Flight::request()->data->edad;
     $email = Flight::request()->data->email;
+    $telefono = Flight::request()->data->telefono;
     $id = Flight::request()->data->id;
 
-    $sql = "UPDATE clientes SET nombre=:nombre, appelidos=:appelidos, email=:email WHERE id=:id";
+    $sql = "UPDATE clientes SET appelidos=:appelidos, edad=:edad, email=:email, telefono=:telefono WHERE id=:id";
     $query = Flight::db()->prepare($sql);
 
-    $query->bindParam(':nombre', $nombre);
     $query->bindParam(':apellidos', $apellidos);
+    $query->bindParam(':edad', $edad);
     $query->bindParam(':email', $email);
+    $query->bindParam(':telefono', $telefono);
     $query->bindParam(':id', $id);
 
     $query->execute();
 
     Flight::json(["Os datos do cliente foron modificados correctamente na base de datos."]);
 });
-
-Flight::start();
 
 /* Tabla Hoteles
 
@@ -87,6 +91,69 @@ Se debe permitir las siguientes acciones sobre la tabla clientes y la ruta ```/h
 - DELETE: Dado un id se debe poder eliminar un hotel.
 - PUT: Se podrá modificar de un hotel sus direccion, email y teléfono. 
 */
+
+Flight::route('GET /hoteles', function () {
+    $query = Flight::db()->prepare("SELECT * from hoteles");
+    $query->execute();
+    $data = $query->fetchAll();
+    Flight::json($data);
+});
+
+
+Flight::route('POST /hoteles', function () {
+    $hotel = Flight::request()->data->hotel;
+    $direccion = Flight::request()->data->direccion;
+    $telefono = Flight::request()->data->telefono;
+    $email = Flight::request()->data->email;
+
+
+    $sql = "INSERT INTO hoteles (hotel, direccion, telefono, email) VALUES (:hotel, :direccion, :telefono, :email)";
+    $query = Flight::db()->prepare($sql);
+
+    $query->bindParam(':hotel', $hotel);
+    $query->bindParam(':direccion', $direccion);
+    $query->bindParam(':telefono', $telefono);
+    $query->bindParam(':email', $email);
+
+    $query->execute();
+
+    Flight::json(["O hotel foi agregado correctamente á base de datos."]);
+});
+
+Flight::route('DELETE /hoteles', function () {
+    $id = Flight::request()->data->id;
+
+    $sql = "DELETE FROM hoteles WHERE id=:id";
+    $query = Flight::db()->prepare($sql);
+
+    $query->bindParam(':id', $id);
+
+    $query->execute();
+
+    Flight::json(["O hotel foi eliminado correctamente da base de datos."]);
+});
+
+Flight::route('PUT /hoteles', function () {
+    $hotel = Flight::request()->data->hotel;
+    $direccion = Flight::request()->data->direccion;
+    $telefono = Flight::request()->data->telefono;
+    $email = Flight::request()->data->email;
+    $id = Flight::request()->data->id;
+
+    $sql = "UPDATE hoteles SET hotel=:hotel, direccion=:direccion, telefono=:telefono, email=:email WHERE id=:id";
+    $query = Flight::db()->prepare($sql);
+
+    $query->bindParam(':hotel', $hotel);
+    $query->bindParam(':direccion', $direccion);
+    $query->bindParam(':telefono', $telefono);
+    $query->bindParam(':email', $email);
+    $query->bindParam(':id', $id);
+
+    $query->execute();
+
+    Flight::json(["Os datos do hotel foron modificados correctamente na base de datos."]);
+});
+
 /* Tabla Reserva
 
 Se debe permitir las siguientes acciones sobre la tabla clientes y la ruta ```/reservas```. Hay que tener en cuenta que esta tabla tiene dependencias con las otras dos tablas. 
@@ -97,3 +164,6 @@ Se debe permitir las siguientes acciones sobre la tabla clientes y la ruta ```/r
 - DELETE: Dado un id se debe poder eliminar una reserva.
 - PUT: Se podrá modificar de una reserva la fecha de entrada y la fecha de salida.
  */
+
+ 
+Flight::start();
