@@ -44,7 +44,7 @@ Flight::route('POST /clientes', function () {
 
     $query->execute();
 
-    Flight::json(["O cliente foi agregado correctamente á base de datos."]);
+    Flight::json(["O cliente foi engadido correctamente á base de datos."]);
 });
 
 Flight::route('DELETE /clientes', function () {
@@ -117,7 +117,7 @@ Flight::route('POST /hoteles', function () {
 
     $query->execute();
 
-    Flight::json(["O hotel foi agregado correctamente á base de datos."]);
+    Flight::json(["O hotel foi engadido correctamente á base de datos."]);
 });
 
 Flight::route('DELETE /hoteles', function () {
@@ -165,5 +165,60 @@ Se debe permitir las siguientes acciones sobre la tabla clientes y la ruta ```/r
 - PUT: Se podrá modificar de una reserva la fecha de entrada y la fecha de salida.
  */
 
- 
+Flight::route('GET /reservas', function () {
+    $query = Flight::db()->prepare("SELECT * from reservas");
+    $query->execute();
+    $data = $query->fetchAll();
+    Flight::json($data);
+});
+
+
+Flight::route('POST /reservas', function () {
+    $fecha_reserva = Flight::request()->data->fecha_reserva;
+    $fecha_entrada = Flight::request()->data->fecha_entrada;
+    $fecha_salida = Flight::request()->data->fecha_salida;
+
+
+    $sql = "INSERT INTO reservas (fecha_reserva, fecha_entrada, fecha_salida) VALUES (:fecha_reserva, :fecha_entrada, :fecha_salida)";
+    $query = Flight::db()->prepare($sql);
+
+    $query->bindParam(':fecha_reserva', $fecha_reserva);
+    $query->bindParam(':fecha_entrada', $fecha_entrada);
+    $query->bindParam(':fecha_salida', $fecha_salida);
+
+    $query->execute();
+
+    Flight::json(["A reserva foi engadida correctamente á base de datos."]);
+});
+
+Flight::route('DELETE /reservas', function () {
+    $id = Flight::request()->data->id;
+
+    $sql = "DELETE FROM reservas WHERE id=:id";
+    $query = Flight::db()->prepare($sql);
+
+    $query->bindParam(':id', $id);
+
+    $query->execute();
+
+    Flight::json(["A reserva foi eliminada correctamente da base de datos."]);
+});
+
+Flight::route('PUT /reservas', function () {
+    $fecha_entrada = Flight::request()->data->fecha_entrada;
+    $fecha_salida = Flight::request()->data->fecha_salida;
+    $id = Flight::request()->data->id;
+
+    $sql = "UPDATE reservas SET fecha_entrada=:fecha_entrada, fecha_salida=:fecha_salida WHERE id=:id";
+    $query = Flight::db()->prepare($sql);
+
+    $query->bindParam(':fecha_entrada', $fecha_entrada);
+    $query->bindParam(':fecha_salida', $fecha_salida);
+    $query->bindParam(':id', $id);
+
+    $query->execute();
+
+    Flight::json(["As datas da reserva foron modificados correctamente na base de datos."]);
+});
+
 Flight::start();
